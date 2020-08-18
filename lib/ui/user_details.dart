@@ -90,13 +90,13 @@ class UserState extends State<UserDetailsScreen>{
   }
 
   void removeTask(int value){
-    print('true $value');
+
     if(value==0){
       WidgetsBinding.instance.addPostFrameCallback((_){
         Navigator.of(context).pop();
       });
     }
-    //Navigator.pop(context);
+
   }
 
   Widget getMainContent(Data data){

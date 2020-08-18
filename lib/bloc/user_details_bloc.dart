@@ -20,7 +20,7 @@ class UserDetailsBloc extends Bloc{
 
   StreamSink<int> get counterSink=>_counterStreamController.sink;
 
-  int counter = 5;
+  int counter;
 
   UserDetailsBloc(){
     _streamController = new StreamController<Response<UserDetails>>.broadcast();
@@ -30,6 +30,7 @@ class UserDetailsBloc extends Bloc{
 
   void fetchUserDetails(int userId)async{
 
+    counter = 5;
     streamControllerSink.add(Response.loading('Fetching user details....'));
     try{
       var resp = await _userDetailsRepo.fetchUserDetails(userId);
@@ -47,7 +48,6 @@ class UserDetailsBloc extends Bloc{
        await new Future.delayed(Duration(milliseconds : 1000));
        counter--;
        counterSink.add(counter);
-       print(counter);
      }
   }
 

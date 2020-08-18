@@ -4,7 +4,6 @@ import 'package:geideaflutter/bloc/bloc_provider.dart';
 import 'package:geideaflutter/rest/Response.dart';
 import 'package:geideaflutter/rest/Status.dart';
 import 'package:geideaflutter/rest/response/data.dart';
-import 'package:geideaflutter/rest/response/user_details.dart';
 import 'package:geideaflutter/rest/response/users.dart';
 import 'package:geideaflutter/ui/user_details.dart';
 

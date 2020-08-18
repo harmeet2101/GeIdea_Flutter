@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geideaflutter/main.dart';
+import 'file:///D:/softwares/job_interview_assignmnets/GeIdea/Flutter/GeIdea_Flutter/lib/ui/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

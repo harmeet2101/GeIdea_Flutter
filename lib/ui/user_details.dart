@@ -11,8 +11,9 @@ import 'package:geideaflutter/rest/response/user_details.dart';
 class UserDetailsScreen extends StatefulWidget{
 
   int userId;
+  bool isOffline;
 
-  UserDetailsScreen({this.userId});
+  UserDetailsScreen({this.userId,this.isOffline});
 
   @override
   State<StatefulWidget> createState() {
@@ -30,7 +31,7 @@ class UserState extends State<UserDetailsScreen>{
     super.initState();
     _appBloc  = BlocProvider.of<AppBloc>(context);
     UserDetailsBloc userDetailsBloc = _appBloc.userDetailsBloc;
-    userDetailsBloc.fetchUserDetails(widget.userId);
+    userDetailsBloc.fetchUserDetails(widget.userId,widget.isOffline);
 
   }
 

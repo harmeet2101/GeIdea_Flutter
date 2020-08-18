@@ -20,15 +20,17 @@ class UsersBloc extends Bloc{
 
 
   UsersBloc(){
-    _streamController = new StreamController<Response<Users>>();
+    _streamController = new StreamController<Response<Users>>.broadcast();
     _allUsersRepo = new AllUsersRepo();
   }
 
-  void fetchUsers()async{
+  void fetchUsers(bool isOffline)async{
 
+    print('offline : $isOffline');
     streamControllerSink.add(Response.loading('Fetching users....'));
     try{
-      var resp = await _allUsersRepo.fetchAllUsers();
+      var resp = await _allUsersRepo.fetchAllUsers(isOffline);
+      print('resp: $resp');
       streamControllerSink.add(Response.completed(resp));
     }catch(e){
       streamControllerSink.add(Response.error(e.toString()));

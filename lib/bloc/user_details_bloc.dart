@@ -28,12 +28,12 @@ class UserDetailsBloc extends Bloc{
     _userDetailsRepo = new UserDetailsRepo();
   }
 
-  void fetchUserDetails(int userId)async{
+  void fetchUserDetails(int userId,bool isOffline)async{
 
     counter = 5;
     streamControllerSink.add(Response.loading('Fetching user details....'));
     try{
-      var resp = await _userDetailsRepo.fetchUserDetails(userId);
+      var resp = await _userDetailsRepo.fetchUserDetails(userId,isOffline);
       streamControllerSink.add(Response.completed(resp));
       decrementCounter();
     }catch(e){

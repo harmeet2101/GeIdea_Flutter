@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geideaflutter/bloc/app_bloc.dart';
 import 'package:geideaflutter/bloc/bloc_provider.dart';
 import 'package:geideaflutter/rest/Response.dart';
@@ -42,16 +46,68 @@ class _MyHomePageState extends State<MyHomePage> {
 
    AppBloc _appBloc;
 
+   String _connectionStatus = 'Unknown';
+   final Connectivity _connectivity = Connectivity();
+   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+   bool isOffline = false;
    @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     _appBloc = BlocProvider.of<AppBloc>(context);
-    _appBloc.userBloc.fetchUsers();
+
   }
 
+   // Platform messages are asynchronous, so we initialize in an async method.
+   Future<void> initConnectivity() async {
+     ConnectivityResult result;
+
+     try {
+       result = await _connectivity.checkConnectivity();
+     } on PlatformException catch (e) {
+       print(e.toString());
+     }
+
+     if (!mounted) {
+       return Future.value(null);
+     }
+
+     return _updateConnectionStatus(result);
+   }
+
+   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+     switch (result) {
+       case ConnectivityResult.wifi:
+         setState(() {
+           isOffline = false;
+         });
+         break;
+       case ConnectivityResult.mobile:{
+         setState(() {
+           isOffline = false;
+         });
+       }
+           break;
+       case ConnectivityResult.none:{
+         setState(() {
+           isOffline = true;
+         });
+       }
+       break;
+       default:{
+       setState(() {
+         isOffline = true;
+       });
+     }
+     }
+   }
   @override
   Widget build(BuildContext context) {
+
+    _appBloc.userBloc.fetchUsers(isOffline);
     return Scaffold(
       appBar: AppBar(
 
@@ -62,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: StreamBuilder<Response<Users>>(builder: (context,snapshot){
 
           if(snapshot.hasData){
-
+            print(snapshot.data.data);
             switch(snapshot.data.status){
 
               case Status.LOADING:
@@ -91,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
        return GestureDetector(
          onTap: (){
            Navigator.push(buildContext,
-               MaterialPageRoute(builder: (buildContext)=>UserDetailsScreen(userId: dataList[index].id,)));
+               MaterialPageRoute(builder: (buildContext)=>UserDetailsScreen(userId: dataList[index].id,isOffline: isOffline,)));
          },
          child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
